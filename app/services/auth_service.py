@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from app.models.user import User, Address
 from app.core.security import get_password_hash
 # 👇 CORRECCIÓN: Importamos AddressCreate en lugar de AddressBase
-from app.schemas.user import UserCreate, AddressCreate
+from app.schemas.user import UserCreate, AddressCreate, UserUpdate
 
 def crear_usuario(db: Session, user: UserCreate):
     hashed_pwd = get_password_hash(user.password)
@@ -29,3 +29,27 @@ def agregar_direccion(db: Session, user_id: int, address: AddressCreate):
     db.commit()
     db.refresh(db_address)
     return db_address
+
+#Actualizar usuario
+def update_user_profile(
+    db: Session,
+    current_user: User,
+    data: UserUpdate,
+) -> User:
+    """
+    Actualiza los datos básicos del usuario autenticado.
+    Solo cambia los campos que vengan en el payload.
+    """
+    if data.nombre is not None:
+        current_user.nombre = data.nombre
+
+    if data.apellido is not None:
+        current_user.apellido = data.apellido
+
+    if data.celular is not None:
+        current_user.celular = data.celular
+
+    db.add(current_user)
+    db.commit()
+    db.refresh(current_user)
+    return current_user
