@@ -54,3 +54,13 @@ class AddressResponse(AddressCreate):
     usuario_id: int
     
     model_config = ConfigDict(from_attributes=True)
+
+# ... (aquí ya tendrás otros esquemas: UserCreate, UserOut, etc.)
+
+class UserUpdate(BaseModel):
+    nombre: Optional[str] = None
+    apellido: Optional[str] = None
+    celular: Optional[str] = None  # coincide con tu modelo
+
+    class Config:
+        orm_mode = True
