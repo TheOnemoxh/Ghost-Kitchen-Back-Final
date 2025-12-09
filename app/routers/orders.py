@@ -3,7 +3,7 @@ from typing import List
 from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.services import order_service
-# Importamos TODOS los esquemas necesarios (Creación, Respuesta, Historial, Detalle)
+# Importamos TODOS los esquemas necesarios
 from app.schemas.order import OrderCreate, OrderResponse, OrderHistory, OrderFullDetail
 
 router = APIRouter(prefix="/pedidos", tags=["Pedidos"])
@@ -15,7 +15,7 @@ def registrar_pedido(pedido: OrderCreate, db: Session = Depends(get_db)):
     Registra un nuevo pedido.
     Si el método de pago es 'LINEA', simula la pasarela de pagos.
     """
-    # Simulamos usuario ID 1 temporalmente (hasta conectar Auth real)
+    # Simulamos usuario ID 1 temporalmente
     user_id_simulado = 1 
     return order_service.crear_pedido(db, pedido, user_id_simulado)
 
@@ -44,3 +44,15 @@ def ver_detalle_pedido(id_pedido: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Pedido no encontrado o no te pertenece")
         
     return detalle
+
+# ---------------------------------------------------------
+# 4. CANCELAR PEDIDO (POST /pedidos/{id}/cancel) - ¡NUEVO!
+# ---------------------------------------------------------
+@router.post("/{id_pedido}/cancel")
+def cancelar_pedido_endpoint(id_pedido: int, db: Session = Depends(get_db)):
+    """
+    Cancela un pedido si todavía está en estado CONFIRMED.
+    """
+    user_id_simulado = 1
+    # Llamamos a la función nueva que creamos en el servicio
+    return order_service.cancelar_pedido(db, id_pedido, user_id_simulado)

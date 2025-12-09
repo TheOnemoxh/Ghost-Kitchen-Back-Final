@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from app.models.order import Order, OrderDetail
+from app.models.order import Order, OrderDetail, OrderStatus
 from app.models.product import Product
 from app.schemas.order import OrderCreate
 # Importamos la simulación de pago
@@ -13,6 +13,7 @@ def crear_pedido(db: Session, order_data: OrderCreate, user_id: int):
     total_calculado = 0.0
     items_procesados = []
     
+    # 1. Validar productos y calcular total
     for item in order_data.items:
         producto = db.query(Product).filter(Product.id == item.producto_id).first()
         if not producto:
@@ -27,19 +28,20 @@ def crear_pedido(db: Session, order_data: OrderCreate, user_id: int):
             "precio_unitario": producto.precio
         })
 
-    estado_inicial = "CONFIRMADO"
+    # 2. Procesar pago si es necesario
     id_transaccion = None
     
     if order_data.metodo_pago == "LINEA":
         try:
             id_transaccion = procesar_pago_simulado(total_calculado)
-            estado_inicial = "PAGADO"
+            # Nota: Aunque esté pagado, el estado visual para el timeline es CONFIRMED (Paso 1)
         except Exception as e:
             raise HTTPException(status_code=400, detail=f"Error pago: {str(e)}")
 
+    # 3. Crear el Pedido en BD
     nuevo_pedido = Order(
         cliente_id=user_id, 
-        estado=estado_inicial, 
+        estado=OrderStatus.CONFIRMED.value,  # Usamos el Enum para consistencia
         total=total_calculado,
         metodo_pago=order_data.metodo_pago,
         id_transaccion=id_transaccion
@@ -49,6 +51,7 @@ def crear_pedido(db: Session, order_data: OrderCreate, user_id: int):
     db.commit()
     db.refresh(nuevo_pedido)
     
+    # 4. Guardar los detalles
     for item_data in items_procesados:
         detalle = OrderDetail(
             pedido_id=nuevo_pedido.id,
@@ -63,33 +66,57 @@ def crear_pedido(db: Session, order_data: OrderCreate, user_id: int):
 
 
 # ---------------------------------------------------------
-# 2. OBTENER HISTORIAL (CORREGIDO - MANUAL)
+# 2. CANCELAR PEDIDO (NUEVO)
+# ---------------------------------------------------------
+def cancelar_pedido(db: Session, order_id: int, user_id: int):
+    # Buscar el pedido asegurando que pertenezca al usuario
+    order = db.query(Order).filter(
+        Order.id == order_id, 
+        Order.cliente_id == user_id
+    ).first()
+    
+    if not order:
+        raise HTTPException(status_code=404, detail="Pedido no encontrado")
+
+    # VALIDACIÓN: Solo se puede cancelar si está en CONFIRMED (Paso 1)
+    if order.estado != OrderStatus.CONFIRMED.value:
+        raise HTTPException(
+            status_code=400, 
+            detail="El pedido ya está en preparación o camino y no puede ser cancelado."
+        )
+
+    order.estado = OrderStatus.CANCELLED.value
+    db.commit()
+    db.refresh(order)
+    
+    return {"mensaje": "Pedido cancelado exitosamente", "estado": order.estado}
+
+
+# ---------------------------------------------------------
+# 3. OBTENER HISTORIAL
 # ---------------------------------------------------------
 def obtener_historial_cliente(db: Session, user_id: int):
-    # Obtenemos los objetos de la BD
     ordenes = db.query(Order)\
              .filter(Order.cliente_id == user_id)\
              .order_by(Order.fecha.desc())\
              .all()
     
-    # 🔥 SOLUCIÓN DEFINITIVA: Convertimos a diccionarios manualmente
-    # Esto evita que Pydantic intente leer atributos lazy que fallan
     resultado = []
     for o in ordenes:
         resultado.append({
             "id": o.id,
             "fecha": o.fecha,
-            "total": float(o.total), # Aseguramos float
-            "estado": str(o.estado),
+            "total": float(o.total),
+            "estado": str(o.estado), # Devuelve "CONFIRMED", "PREPARING", etc.
             "metodo_pago": str(o.metodo_pago),
-            "cantidad_items": len(o.detalles) # Calculamos aquí
+            "cantidad_items": len(o.detalles)
         })
         
     return resultado
 
 
 # ---------------------------------------------------------
-# 3. OBTENER DETALLE (CORREGIDO - MANUAL)
+# 4. OBTENER DETALLE
 # ---------------------------------------------------------
 def obtener_detalle_pedido(db: Session, order_id: int, user_id: int):
     order = db.query(Order).filter(
@@ -107,10 +134,9 @@ def obtener_detalle_pedido(db: Session, order_id: int, user_id: int):
             "cantidad": detalle.cantidad,
             "precio_unitario": float(detalle.precio_unitario),
             "subtotal": float(detalle.precio_unitario * detalle.cantidad),
-            "imagen_producto": detalle.producto.descripcion 
+            "imagen_producto": detalle.producto.descripcion # Ojo: Asegúrate que esto sea la URL
         })
 
-    # Retornamos diccionario puro
     return {
         "id": order.id,
         "fecha": order.fecha,

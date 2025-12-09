@@ -2,6 +2,15 @@ from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from app.core.database import Base
+from enum import Enum
+
+# Definimos los estados exactos que usará el Frontend para la línea de tiempo
+class OrderStatus(str, Enum):
+    CONFIRMED = "CONFIRMED"     # Confirmado (Estado 1)
+    PREPARING = "PREPARING"     # En preparación (Estado 2)
+    ON_WAY = "ON_WAY"           # En camino (Estado 3)
+    DELIVERED = "DELIVERED"     # Entregado (Estado 4)
+    CANCELLED = "CANCELLED"     # Cancelado (Estado especial)
 
 class Order(Base):
     __tablename__ = "pedidos"
@@ -9,8 +18,8 @@ class Order(Base):
     id = Column(Integer, primary_key=True, index=True)
     cliente_id = Column(Integer, ForeignKey("usuarios.id"))
     
-    # Estados: CONFIRMADO, PAGADO, EN_PREPARACION, ETC.
-    estado = Column(String, default="PENDIENTE") 
+    # Por defecto el pedido nace como CONFIRMED
+    estado = Column(String, default=OrderStatus.CONFIRMED.value) 
     total = Column(Float, default=0.0)
     fecha = Column(DateTime, default=datetime.utcnow)
     
@@ -31,5 +40,4 @@ class OrderDetail(Base):
     precio_unitario = Column(Float)
     
     pedido = relationship("Order", back_populates="detalles")
-    # Relación con producto para poder acceder a sus datos si se necesita
     producto = relationship("Product")
