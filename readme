@@ -1,0 +1,12 @@
+eliminar toda la base de datos:
+
+    docker-compose down -v      
+
+correr servidor docker:
+    
+    docker-compose up -d --build
+
+llenar base de datos con el archivo seed_full_data:
+
+    docker-compose exec backend python seed_full_data.py
+    

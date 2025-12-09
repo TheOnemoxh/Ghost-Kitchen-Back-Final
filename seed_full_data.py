@@ -26,7 +26,7 @@ def seed_full_data():
         {
             "nombre": "Ghost Burger 👻",
             # Foto de portada: Hamburguesa grande
-            "imagen": "https://images.unsplash.com/photo-1550547660-d9450f859349?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+            "imagen": "https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?q=80&w=1115&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             "descripcion": "Las mejores hamburguesas a la parrilla.",
             "ubicacion": "Bocagrande, Carrera 3",
             "menu": [
@@ -35,28 +35,35 @@ def seed_full_data():
                     "precio": 22000, 
                     "desc": "Carne 180g, queso cheddar, tocineta.", 
                     # Foto: Hamburguesa clásica
-                    "imagen_producto": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                    "imagen_producto": "https://plus.unsplash.com/premium_photo-1675252369719-dd52bc69c3df?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 },
                 {
                     "nombre": "Doble Muerte", 
                     "precio": 32000, 
                     "desc": "Doble carne, doble queso, aros de cebolla.", 
                     # Foto: Hamburguesa doble
-                    "imagen_producto": "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                    "imagen_producto": "https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?q=80&w=1115&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 },
                 {
                     "nombre": "Papas Fantasma", 
                     "precio": 12000, 
                     "desc": "Papas rústicas con paprika.", 
                     # Foto: Papas fritas
-                    "imagen_producto": "https://images.unsplash.com/photo-1573080496987-a199f8cd75c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                    "imagen_producto": "https://images.unsplash.com/photo-1762284513031-3d7ad15562bc?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 },
                 {
-                    "nombre": "Coca Cola", 
+                    "nombre": "Coca Cola Personal", 
                     "precio": 5000, 
-                    "desc": "Lata 330ml fría.", 
+                    "desc": "Botella 400ml fría.", 
                     # Foto: Refresco
-                    "imagen_producto": "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                    "imagen_producto": "https://supermercadocomunal.com/verbenal/514-large_default/gaseosa-coca-cola-400-ml.jpg"
+                },
+                {
+                    "nombre": "Coca Cola 2 Litros", 
+                    "precio": 10000, 
+                    "desc": "Botella 400ml fría.", 
+                    # Foto: Refresco
+                    "imagen_producto": "https://www.merkadomi.com/wp-content/uploads/2018/07/COCA-COLA-ORIGINAL-RETORNABLE-2L.jpg"
                 }
             ]
         },
@@ -77,7 +84,27 @@ def seed_full_data():
                     "nombre": "Hawaiana", 
                     "precio": 32000, 
                     "desc": "Jamón y piña calada.", 
-                    "imagen_producto": "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                    "imagen_producto": "https://images.unsplash.com/photo-1708782281073-1398b60158a7?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                },
+                {
+                    "nombre": "Carbonara", 
+                    "precio": 32000, 
+                    "desc": "Jamón y piña calada.", 
+                    "imagen_producto": "https://plus.unsplash.com/premium_photo-1661762555601-47d088a26b50?q=80&w=1192&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                },
+                {
+                    "nombre": "Coca Cola Personal", 
+                    "precio": 5000, 
+                    "desc": "Botella 400ml fría.", 
+                    # Foto: Refresco
+                    "imagen_producto": "https://supermercadocomunal.com/verbenal/514-large_default/gaseosa-coca-cola-400-ml.jpg"
+                },
+                {
+                    "nombre": "Coca Cola 2 Litros", 
+                    "precio": 10000, 
+                    "desc": "Botella 400ml fría.", 
+                    # Foto: Refresco
+                    "imagen_producto": "https://www.merkadomi.com/wp-content/uploads/2018/07/COCA-COLA-ORIGINAL-RETORNABLE-2L.jpg"
                 }
             ]
         },
@@ -99,6 +126,160 @@ def seed_full_data():
                     "precio": 25000, 
                     "desc": "Caldo de cerdo y fideos.", 
                     "imagen_producto": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                },
+                {
+                    "nombre": "Coca Cola Personal", 
+                    "precio": 5000, 
+                    "desc": "Botella 400ml fría.", 
+                    # Foto: Refresco
+                    "imagen_producto": "https://supermercadocomunal.com/verbenal/514-large_default/gaseosa-coca-cola-400-ml.jpg"
+                },
+                {
+                    "nombre": "Coca Cola 2 Litros", 
+                    "precio": 10000, 
+                    "desc": "Botella 400ml fría.", 
+                    # Foto: Refresco
+                    "imagen_producto": "https://www.merkadomi.com/wp-content/uploads/2018/07/COCA-COLA-ORIGINAL-RETORNABLE-2L.jpg"
+                }
+            ]
+        },
+        {
+            "nombre": "Pollos Hermanos 🍗",
+            # Foto portada: Pollo frito
+            "imagen": "https://images.unsplash.com/photo-1562967916-eb82221dfb92?q=80&w=686&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            "descripcion": "Especialistas en pollo frito crujiente y acompañamientos.",
+            "ubicacion": "Manga",
+            "menu": [
+                {
+                    "nombre": "Pollo Frito Clásico",
+                    "precio": 22000,
+                    "desc": "Piezas de pollo frito crujiente con especias.",
+                    "imagen_producto": "https://images.unsplash.com/photo-1562967916-eb82221dfb92?q=80&w=686&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                },
+                {
+                    "nombre": "Alitas BBQ",
+                    "precio": 18000,
+                    "desc": "Alitas bañadas en salsa BBQ ahumada.",
+                    "imagen_producto": "https://plus.unsplash.com/premium_photo-1669742928112-19364a33b530?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                },
+                {
+                    "nombre": "Hamburguesa de Pollo Crispy",
+                    "precio": 20000,
+                    "desc": "Filete de pollo empanizado con lechuga y mayonesa.",
+                    "imagen_producto": "https://images.unsplash.com/photo-1615297928064-24977384d0da?q=80&w=1112&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                },
+                {
+                    "nombre": "Papas Fritas",
+                    "precio": 12000,
+                    "desc": "Porción de papas fritas crujientes.",
+                    "imagen_producto": "https://images.unsplash.com/photo-1630431341973-02e1b662ec35?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                },
+                {
+                    "nombre": "Coca Cola Personal", 
+                    "precio": 5000, 
+                    "desc": "Botella 400ml fría.", 
+                    # Foto: Refresco
+                    "imagen_producto": "https://supermercadocomunal.com/verbenal/514-large_default/gaseosa-coca-cola-400-ml.jpg"
+                },
+                {
+                    "nombre": "Coca Cola 2 Litros", 
+                    "precio": 10000, 
+                    "desc": "Botella 400ml fría.", 
+                    # Foto: Refresco
+                    "imagen_producto": "https://www.merkadomi.com/wp-content/uploads/2018/07/COCA-COLA-ORIGINAL-RETORNABLE-2L.jpg"
+                }
+            ]
+        },
+        {
+            "nombre": "El Gran Taco Fiesta 🌮",
+            # Foto portada: Tacos mexicanos
+            "imagen": "https://images.unsplash.com/photo-1613409385222-3d0decb6742a?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            "descripcion": "Auténtica comida mexicana con sazón tradicional.",
+            "ubicacion": "Manga",
+            "menu": [
+                {
+                    "nombre": "Tacos al Pastor",
+                    "precio": 18000,
+                    "desc": "Tortillas de maíz con cerdo adobado y piña.",
+                    "imagen_producto": "https://images.unsplash.com/photo-1613409385222-3d0decb6742a?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                },
+                {
+                    "nombre": "Quesadilla de Pollo",
+                    "precio": 16000,
+                    "desc": "Tortilla rellena de queso derretido y pollo sazonado.",
+                    "imagen_producto": "https://images.unsplash.com/photo-1618040996337-56904b7850b9?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                },
+                {
+                    "nombre": "Burrito Especial",
+                    "precio": 22000,
+                    "desc": "Relleno de carne, arroz, frijoles y guacamole.",
+                    "imagen_producto": "https://images.unsplash.com/photo-1731090389603-d63060ee08a6?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                },
+                {
+                    "nombre": "Nachos con Queso",
+                    "precio": 15000,
+                    "desc": "Totopos crujientes con queso cheddar y jalapeños.",
+                    "imagen_producto": "https://images.unsplash.com/photo-1572680443530-225d4e0d9894?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                },
+                {
+                    "nombre": "Coca Cola Personal", 
+                    "precio": 5000, 
+                    "desc": "Botella 400ml fría.", 
+                    # Foto: Refresco
+                    "imagen_producto": "https://supermercadocomunal.com/verbenal/514-large_default/gaseosa-coca-cola-400-ml.jpg"
+                },
+                {
+                    "nombre": "Coca Cola 2 Litros", 
+                    "precio": 10000, 
+                    "desc": "Botella 400ml fría.", 
+                    # Foto: Refresco
+                    "imagen_producto": "https://www.merkadomi.com/wp-content/uploads/2018/07/COCA-COLA-ORIGINAL-RETORNABLE-2L.jpg"
+                }
+            ]
+        },
+        {
+            "nombre": "El Dragón Oriental 🐲",
+            "imagen": "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=800&q=80",
+            "descripcion": "Auténtica comida china con recetas tradicionales.",
+            "ubicacion": "San Fernando",
+            "menu": [
+                {
+                    "nombre": "Caja de Arroz Frito Especial",
+                    "precio": 30000,
+                    "desc": "Arroz frito con pollo, camarón, huevo y vegetales.",
+                    "imagen_producto": "https://img0.didiglobal.com/static/soda_public/img_f3e44e340bff09b08b4c16a87a728de2.jpg"
+                },
+                {
+                    "nombre": "Ramen Oriental",
+                    "precio": 25000,
+                    "desc": "Caldo intenso con fideos, cerdo y huevo cocido.",
+                    "imagen_producto": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=500&q=60"
+                },
+                {
+                    "nombre": "Pollo Agridulce",
+                    "precio": 28000,
+                    "desc": "Crujiente pollo en salsa agridulce con piña.",
+                    "imagen_producto": "https://plus.unsplash.com/premium_photo-1692835633672-50919fdffb75?q=80&w=688&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                },
+                {
+                    "nombre": "Chow Mein de Pollo",
+                    "precio": 27000,
+                    "desc": "Fideos salteados con verduras y salsa de soya.",
+                    "imagen_producto": "https://images.unsplash.com/photo-1609183480237-ccbb2d7c5772?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                },
+                {
+                    "nombre": "Coca Cola Personal", 
+                    "precio": 5000, 
+                    "desc": "Botella 400ml fría.", 
+                    # Foto: Refresco
+                    "imagen_producto": "https://supermercadocomunal.com/verbenal/514-large_default/gaseosa-coca-cola-400-ml.jpg"
+                },
+                {
+                    "nombre": "Coca Cola 2 Litros", 
+                    "precio": 10000, 
+                    "desc": "Botella 400ml fría.", 
+                    # Foto: Refresco
+                    "imagen_producto": "https://www.merkadomi.com/wp-content/uploads/2018/07/COCA-COLA-ORIGINAL-RETORNABLE-2L.jpg"
                 }
             ]
         }
