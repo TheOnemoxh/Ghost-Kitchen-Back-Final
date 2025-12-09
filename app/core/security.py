@@ -8,14 +8,14 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.models.user import User
 
-# CONFIGURACIÓN (Asegúrate de que coincida con lo que usas para crear el token)
-SECRET_KEY = "tu_clave_secreta_super_segura" # O usa os.getenv
+# CONFIGURACIÓN
+SECRET_KEY = "tu_clave_secreta_super_segura" 
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# Esto le dice a FastAPI dónde obtener el token (en el endpoint de login)
+# Indica que el token se obtiene de la ruta /auth/login
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 def verify_password(plain_password, hashed_password):
@@ -34,7 +34,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-# 👇 --- ESTA ES LA FUNCIÓN QUE TE FALTABA --- 👇
+# 👇 FUNCIÓN POLICÍA: Lee el token y devuelve el usuario real de la BD
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -42,7 +42,6 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        # Decodificamos el token
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email: str = payload.get("sub")
         if email is None:
@@ -50,8 +49,8 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     except JWTError:
         raise credentials_exception
     
-    # Buscamos el usuario en la BD
     user = db.query(User).filter(User.email == email).first()
     if user is None:
         raise credentials_exception
+    
     return user
