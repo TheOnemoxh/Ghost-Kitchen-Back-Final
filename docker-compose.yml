@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  # Servicio 1: Tu Base de Datos
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=ghost_user
+      - POSTGRES_PASSWORD=ghost_password
+      - POSTGRES_DB=ghost_kitchen_db
+    ports:
+      - "5432:5432"
+
+  # Servicio 2: Tu Backend FastAPI
+  backend:
+    build: .
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - .:/app  # ¡Esto permite que si editas código en Windows, se actualice en Docker!
+    ports:
+      - "8000:8000"
+    environment:
+      # OJO: Aquí el host no es 'localhost', es 'db' (el nombre del servicio de arriba)
+      - DATABASE_URL=postgresql://ghost_user:ghost_password@db/ghost_kitchen_db
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
