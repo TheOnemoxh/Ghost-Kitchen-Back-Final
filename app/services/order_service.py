@@ -5,6 +5,9 @@ from app.models.product import Product
 from app.schemas.order import OrderCreate
 # Importamos la simulación de pago
 from app.services.payment_service import procesar_pago_simulado 
+from app.models.order import Order, OrderStatus
+from sqlalchemy import desc # Importa desc para ordenar
+
 
 # ---------------------------------------------------------
 # 1. CREAR PEDIDO
@@ -146,3 +149,23 @@ def obtener_detalle_pedido(db: Session, order_id: int, user_id: int):
         "id_transaccion": order.id_transaccion,
         "items": items_formateados
     }
+
+# En app/services/order_service.p
+# ... otras importaciones ...
+
+# ---------------------------------------------------------
+# 5. OBTENER ÚLTIMO PEDIDO ACTIVO (NUEVO)
+# ---------------------------------------------------------
+def obtener_ultimo_pedido_activo(db: Session, user_id: int):
+    # Buscamos el pedido más reciente del usuario cuyo estado NO sea
+    # ni DELIVERED ni CANCELLED.
+    pedido_activo = db.query(Order).filter(
+        Order.cliente_id == user_id,
+        Order.estado.notin_([OrderStatus.DELIVERED.value, OrderStatus.CANCELLED.value])
+    ).order_by(desc(Order.fecha)).first() # Orden descendente por fecha y tomamos el primero
+
+    if not pedido_activo:
+        return None # No hay pedido activo
+
+    # Devolvemos solo el ID, que es lo que el front necesita para navegar
+    return {"id": pedido_activo.id}
