@@ -16,12 +16,11 @@ class OrderItemCreate(BaseModel):
 
 class OrderCreate(BaseModel):
     items: List[OrderItemCreate]
-    direccion_id: int
+    direccion_id: int  # 👈 NUEVO CAMPO OBLIGATORIO
     metodo_pago: MetodoPago 
 
 # --- OUTPUTS (Backend -> Frontend) ---
 
-# Respuesta al crear
 class OrderResponse(BaseModel):
     id: int
     estado: str
@@ -30,18 +29,15 @@ class OrderResponse(BaseModel):
     id_transaccion: Optional[str] = None
     model_config = ConfigDict(from_attributes=True)
 
-# 🚨 ESTE ES EL QUE FALLABA - LO SIMPLIFICAMOS AL MÁXIMO
 class OrderHistory(BaseModel):
     id: int
     fecha: datetime
     total: float
     estado: str
     metodo_pago: str
-    cantidad_items: int # Recibirá un entero directo, sin cálculos aquí.
-
+    cantidad_items: int
     model_config = ConfigDict(from_attributes=True)
 
-# Item del detalle
 class DetalleItemView(BaseModel):
     producto_nombre: str
     cantidad: int
@@ -50,7 +46,6 @@ class DetalleItemView(BaseModel):
     imagen_producto: Optional[str] = None
     model_config = ConfigDict(from_attributes=True)
 
-# Detalle completo
 class OrderFullDetail(BaseModel):
     id: int
     fecha: datetime
@@ -59,4 +54,8 @@ class OrderFullDetail(BaseModel):
     metodo_pago: str
     id_transaccion: Optional[str] = None
     items: List[DetalleItemView] = []
+    
+    # Opcional: Si quisieras devolver la dirección en el detalle en el futuro
+    # direccion: Optional[AddressDto] = None 
+    
     model_config = ConfigDict(from_attributes=True)

@@ -1,13 +1,18 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import desc
 from fastapi import HTTPException
+
+# Modelos
 from app.models.order import Order, OrderDetail, OrderStatus
 from app.models.product import Product
-from app.schemas.order import OrderCreate
-# Importamos la simulación de pago
-from app.services.payment_service import procesar_pago_simulado 
-from app.models.order import Order, OrderStatus
-from sqlalchemy import desc # Importa desc para ordenar
+# Importamos Address desde user.py para la validación
+from app.models.user import Address 
 
+# Schemas
+from app.schemas.order import OrderCreate
+
+# Servicios externos
+from app.services.payment_service import procesar_pago_simulado 
 
 # ---------------------------------------------------------
 # 1. CREAR PEDIDO
@@ -16,6 +21,19 @@ def crear_pedido(db: Session, order_data: OrderCreate, user_id: int):
     total_calculado = 0.0
     items_procesados = []
     
+    # 0. VALIDACIÓN DE DIRECCIÓN (Seguridad)
+    # Verificamos que la dirección exista Y pertenezca al usuario que está comprando
+    direccion = db.query(Address).filter(
+        Address.id == order_data.direccion_id, 
+        Address.usuario_id == user_id
+    ).first()
+    
+    if not direccion:
+        raise HTTPException(
+            status_code=400, 
+            detail="La dirección seleccionada no es válida o no pertenece al usuario"
+        )
+
     # 1. Validar productos y calcular total
     for item in order_data.items:
         producto = db.query(Product).filter(Product.id == item.producto_id).first()
@@ -37,14 +55,14 @@ def crear_pedido(db: Session, order_data: OrderCreate, user_id: int):
     if order_data.metodo_pago == "LINEA":
         try:
             id_transaccion = procesar_pago_simulado(total_calculado)
-            # Nota: Aunque esté pagado, el estado visual para el timeline es CONFIRMED (Paso 1)
         except Exception as e:
             raise HTTPException(status_code=400, detail=f"Error pago: {str(e)}")
 
     # 3. Crear el Pedido en BD
     nuevo_pedido = Order(
-        cliente_id=user_id, 
-        estado=OrderStatus.CONFIRMED.value,  # Usamos el Enum para consistencia
+        cliente_id=user_id,
+        direccion_id=order_data.direccion_id, # 👈 AQUÍ SE GUARDA LA DIRECCIÓN
+        estado=OrderStatus.CONFIRMED.value,
         total=total_calculado,
         metodo_pago=order_data.metodo_pago,
         id_transaccion=id_transaccion
@@ -69,10 +87,9 @@ def crear_pedido(db: Session, order_data: OrderCreate, user_id: int):
 
 
 # ---------------------------------------------------------
-# 2. CANCELAR PEDIDO (NUEVO)
+# 2. CANCELAR PEDIDO
 # ---------------------------------------------------------
 def cancelar_pedido(db: Session, order_id: int, user_id: int):
-    # Buscar el pedido asegurando que pertenezca al usuario
     order = db.query(Order).filter(
         Order.id == order_id, 
         Order.cliente_id == user_id
@@ -81,7 +98,6 @@ def cancelar_pedido(db: Session, order_id: int, user_id: int):
     if not order:
         raise HTTPException(status_code=404, detail="Pedido no encontrado")
 
-    # VALIDACIÓN: Solo se puede cancelar si está en CONFIRMED (Paso 1)
     if order.estado != OrderStatus.CONFIRMED.value:
         raise HTTPException(
             status_code=400, 
@@ -110,7 +126,7 @@ def obtener_historial_cliente(db: Session, user_id: int):
             "id": o.id,
             "fecha": o.fecha,
             "total": float(o.total),
-            "estado": str(o.estado), # Devuelve "CONFIRMED", "PREPARING", etc.
+            "estado": str(o.estado),
             "metodo_pago": str(o.metodo_pago),
             "cantidad_items": len(o.detalles)
         })
@@ -137,7 +153,7 @@ def obtener_detalle_pedido(db: Session, order_id: int, user_id: int):
             "cantidad": detalle.cantidad,
             "precio_unitario": float(detalle.precio_unitario),
             "subtotal": float(detalle.precio_unitario * detalle.cantidad),
-            "imagen_producto": detalle.producto.descripcion # Ojo: Asegúrate que esto sea la URL
+            "imagen_producto": detalle.producto.descripcion
         })
 
     return {
@@ -150,22 +166,17 @@ def obtener_detalle_pedido(db: Session, order_id: int, user_id: int):
         "items": items_formateados
     }
 
-# En app/services/order_service.p
-# ... otras importaciones ...
 
 # ---------------------------------------------------------
-# 5. OBTENER ÚLTIMO PEDIDO ACTIVO (NUEVO)
+# 5. OBTENER ÚLTIMO PEDIDO ACTIVO
 # ---------------------------------------------------------
 def obtener_ultimo_pedido_activo(db: Session, user_id: int):
-    # Buscamos el pedido más reciente del usuario cuyo estado NO sea
-    # ni DELIVERED ni CANCELLED.
     pedido_activo = db.query(Order).filter(
         Order.cliente_id == user_id,
         Order.estado.notin_([OrderStatus.DELIVERED.value, OrderStatus.CANCELLED.value])
-    ).order_by(desc(Order.fecha)).first() # Orden descendente por fecha y tomamos el primero
+    ).order_by(desc(Order.fecha)).first()
 
     if not pedido_activo:
-        return None # No hay pedido activo
+        return None
 
-    # Devolvemos solo el ID, que es lo que el front necesita para navegar
     return {"id": pedido_activo.id}
