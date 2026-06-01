@@ -16,7 +16,7 @@ services:
   # Servicio 2: Tu Backend FastAPI
   backend:
     build: .
-    command: uvicorn main:app --host 0.0.0.0 --port 7860 --reload
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
     volumes:
       - .:/app  # ¡Esto permite que si editas código en Windows, se actualice en Docker!
     ports:
