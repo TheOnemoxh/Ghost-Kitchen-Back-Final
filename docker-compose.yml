@@ -20,7 +20,7 @@ services:
     volumes:
       - .:/app  # ¡Esto permite que si editas código en Windows, se actualice en Docker!
     ports:
-      - "8000:8000"
+      - "7860:7860"
     environment:
       # OJO: Aquí el host no es 'localhost', es 'db' (el nombre del servicio de arriba)
       - DATABASE_URL=postgresql://ghost_user:ghost_password@db/ghost_kitchen_db
