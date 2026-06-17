@@ -11,8 +11,8 @@ SQLALCHEMY_DATABASE_URL = os.getenv(
 # Configuración agresiva para alto tráfico
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
-    pool_size=50,        # Conexiones base
-    max_overflow=50,     # Conexiones de emergencia (Total: 100 simultáneas)
+    pool_size=500,        # Conexiones base
+    max_overflow=500,     # Conexiones de emergencia (Total: 100 simultáneas)
     pool_timeout=120,    # Dale hasta 2 minutos a la fila para responder bajo estrés extremo
     pool_recycle=1800,   # Reinicia conexiones cada 30 min para evitar desconexiones fantasma de red
     pool_pre_ping=True   # Verifica que la conexión esté viva antes de usarla (Evita fallos en picos)
